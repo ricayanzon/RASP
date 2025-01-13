@@ -8,3 +8,32 @@ def _check_is_palindrome(seq) {
 }
 
 is_palindrome = _check_is_palindrome(tokens_str);
+
+
+def substring_until_last(seq, end_char) {
+	later = select(indices, indices, >);
+	sub_str_sel = select(seq, end_char, ==) and later;
+  return has_focus(sub_str_sel) * seq;
+}
+
+
+def substring_from_first(seq, start_char) {
+	earlier = select(indices, indices, <);
+	sub_str_sel = select(seq, start_char, ==) and earlier;
+  return has_focus(sub_str_sel) * seq;
+}
+
+
+# sequences need to be separated by separator token: "#"
+def _check_are_anagrams(seq) {
+  seq_1 = substring_until_last(seq, "#");
+  seq_2 = substring_from_first(seq, "#");
+	seq_1_sorted = sort(seq_1, seq_1);
+	seq_2_sorted = sort(seq_2, seq_2);
+	matches = seq_1_sorted == seq_2_sorted;
+  matches_count = count(matches, True);
+  return matches_count == length;
+}
+
+are_anagrams = _check_are_anagrams(tokens_str);
+
