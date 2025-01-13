@@ -1,0 +1,10 @@
+# naive solution, idea for improved version: splitting input by half, reversing only second half and then comparing element-wise
+def _check_is_palindrome(seq) {
+	flip_seq = select(indices,length-1-indices,==);
+	reversed_seq = aggregate(flip_seq, seq);
+	matches = seq == reversed_seq;
+	matches_count = count(matches, True);
+	return matches_count == length;
+}
+
+is_palindrome = _check_is_palindrome(tokens_str);
