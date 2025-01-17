@@ -35,3 +35,11 @@ def _check_are_anagrams(seq) {
 
 are_anagrams = _check_are_anagrams(tokens_str);
 
+
+def _count_unique_tokens(str) {
+  earlier = select(str, str, ==) and select(indices, indices, <);
+  first_occurrences = not aggregate(earlier, 1);
+  return count(first_occurrences, True);
+}
+
+count_unique_tokens = _count_unique_tokens(tokens_str);
