@@ -1,13 +1,11 @@
-# naive solution, idea for improved version: splitting input by half, reversing only second half and then comparing element-wise
-def _check_is_palindrome(seq) {
-	flip_seq = select(indices,length-1-indices,==);
-	reversed_seq = aggregate(flip_seq, seq);
-	matches = seq == reversed_seq;
-	matches_count = count(matches, True);
-	return matches_count == length;
+def _has_matching_token(seq) {
+  sel_equal = select(seq, seq, ==);
+  sel_all_backwards = select(indices, length - indices - 1, ==);
+  sel_palindrome = sel_equal and sel_all_backwards;
+  return has_focus(sel_palindrome);
 }
 
-is_palindrome = _check_is_palindrome(tokens_str);
+is_palindrome = count(_has_matching_token(tokens_str), True) == length;
 
 
 def substring_until_last(seq, end_char) {
