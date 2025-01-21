@@ -43,3 +43,29 @@ def _count_unique_tokens(str) {
 }
 
 count_unique_tokens = _count_unique_tokens(tokens_str);
+
+
+# Example for not being a lower bound for transformer architecture:
+# A program without any select and aggregate, that compiles to a
+# certain architecture, that can also be implemented using select
+# and aggregate and therefore compiles into another architecture,
+# consisting of different numbers of attention heads and layers.
+
+# The (efficient) implementation without select & aggregate:
+# Compiles to 1 layer, 1 attention head
+def _count_vowels_efficient(tks) {
+  is_vowel = tks in ["a", "e", "i", "o", "u", "A", "E", "I", "O", "U"];
+  return count(is_vowel, True);
+}
+count_vowels_efficiently = _count_vowels_efficient(tokens);
+
+# The (less efficient) implementation with select & aggregate:
+# Compiles to 1 layer, 2 attention heads
+def _count_vowels_inefficient(tks) {
+  is_vowel = tks in ["a", "e", "i", "o", "u", "A", "E", "I", "O", "U"];
+  is_vowel_binary = indicator(is_vowel);
+  select_all = select(1, 1, ==);
+  avg_vowels = aggregate(select_all, is_vowel_binary, 0);
+  return avg_vowels * length;
+}
+count_vowels_inefficiently = _count_vowels_inefficient(tokens);
