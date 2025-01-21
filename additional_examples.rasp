@@ -1,39 +1,41 @@
-def _has_matching_token(seq) {
+def _has_matching_end_token(seq) {
   sel_equal = select(seq, seq, ==);
   sel_all_backwards = select(indices, length - indices - 1, ==);
-  sel_palindrome = sel_equal and sel_all_backwards;
-  return has_focus(sel_palindrome);
+  sel_matching_tokens = sel_equal and sel_all_backwards;
+  return aggregate(sel_matching_tokens, 1);
 }
 
-is_palindrome = count(_has_matching_token(tokens_str), True) == length;
+is_palindrome = count(_has_matching_end_token(tokens_str), 1) == length;
 
 
+# Selects tokens until the first occurrence of the end_char
 def substring_until_last(seq, end_char) {
 	later = select(indices, indices, >);
-	sub_str_sel = select(seq, end_char, ==) and later;
-  return has_focus(sub_str_sel) * seq;
+	substring_sel = select(seq, end_char, ==) and later;
+  substring_until = aggregate(substring_sel, 1);
+  return substring_until * seq;
 }
 
-
+# Selects tokens starting from the first occurrence of the start_char
 def substring_from_first(seq, start_char) {
 	earlier = select(indices, indices, <);
-	sub_str_sel = select(seq, start_char, ==) and earlier;
-  return has_focus(sub_str_sel) * seq;
+	substring_sel = select(seq, start_char, ==) and earlier;
+  substring_from = aggregate(substring_sel, 1);
+  return substring_from * seq;
 }
 
-
-# sequences need to be separated by separator token: "#"
-def _check_are_anagrams(seq) {
-  seq_1 = substring_until_last(seq, "#");
-  seq_2 = substring_from_first(seq, "#");
+# Sequences need to be separated by separator token
+def _check_are_anagrams(seq, sep) {
+  seq_1 = substring_until_last(seq, sep);
 	seq_1_sorted = sort(seq_1, seq_1);
+  seq_2 = substring_from_first(seq, sep);
 	seq_2_sorted = sort(seq_2, seq_2);
 	matches = seq_1_sorted == seq_2_sorted;
   matches_count = count(matches, True);
   return matches_count == length;
 }
 
-are_anagrams = _check_are_anagrams(tokens_str);
+are_anagrams = _check_are_anagrams(tokens, "#"); # only callable with the set example
 
 
 def _count_unique_tokens(str) {
